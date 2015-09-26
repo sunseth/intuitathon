@@ -44,11 +44,14 @@
           </div>
         </div>
       </div>
-
+      {{videoId}}
       <div class="ui basic segment">
         <div class="ui one center aligned column page grid">
           <div class="ui raised segment" ng-repeat="post in posts">
-            <a class="ui red ribbon label">{{post.published}}</a>
+            <a class="ui blue ribbon label">{{post.published}}</a>
+            <a class="ui large blue right corner label">
+              <i class="youtube play icon" ng-click="self.showVideo()"></i>
+            </a>
             <div class="ui center aligned header"><h1>{{post.title}}</h1></div>
             <div class="ui center aligned header"><h3>By {{post.author}}</h3></div>
             <div class="ui text container" ng-bind-html="self.htmlParse(post.body)">
@@ -57,6 +60,14 @@
         </div>
       </div>
       <br>
+    </div>
+    <div class="ui modal">
+      <i class="close icon"></i>
+      <div class="ui basic center aligned segment">
+        <iframe id="player" type="text/html" width="640" height="390"
+          ng-src="{{self.trustYoutubeSrc(videoId)}}"
+          frameborder="0"></iframe>
+      </div>
     </div>
   </body>
   <%- include footer %>

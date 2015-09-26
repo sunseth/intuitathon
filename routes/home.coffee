@@ -1,6 +1,7 @@
 lodash = require 'lodash'
 request = require 'request'
-{Post, Response} = require('../data')
+natural = require 'natural'
+{Post, Response, Video} = require('../data')
 config = require '../config'
 
 mapf = () ->
@@ -45,18 +46,14 @@ module.exports = (app) ->
       console.log relevantPosts
       res.send({relevantPosts})
 
-  app.get '/videos', (req, res, next) ->
-    youtubeUser = "TurboTax"
-    youtubeUrl = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=#{youtubeUser}&key=#{config.youtube.key}"
-    request(youtubeUrl, (err, response, body) ->
-      body = JSON.parse(body)
-      uploadsKey = body.items[0].contentDetails.relatedPlaylists.uploads
-      playlistUrl = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=#{uploadsKey}&key=#{config.youtube.key}"
-      request(playlistUrl, (err, _response, body) ->
-        console.log JSON.parse(body)
-        res.send JSON.parse(body)
-      )
-    )
+  app.post '/video', (req, res, next) ->
+    console.log 'video'
+    tags = req.body.tags
+    console.log tags
+    Video.find({homeCategory: true}).exec (err, videos) ->
+      bestVideo = findBestVideo(videos, tags)
+      console.log bestVideo
+      res.send {bestVideo}
 
 
 findTopWords = (results, tags) ->
@@ -83,6 +80,22 @@ findRelevantPosts = (posts, tags) ->
       highestRelevancy = totalRelevance
       returnPost = post
   return returnPost
+
+findBestVideo = (videos, tags) ->
+  highestRelevancy = 0
+  returnVideo = null
+  for video in videos
+    totalRelevance = 0
+    for word in video.titleWords
+      for tag in tags
+        if natural.JaroWinklerDistance(word, tag) > 0.85
+          totalRelevance += 10
+        else
+          totalRelevance += natural.JaroWinklerDistance(word, tag)
+    if totalRelevance > highestRelevancy
+      highestRelevancy = totalRelevance
+      returnVideo = video
+  return returnVideo
 
 
 
