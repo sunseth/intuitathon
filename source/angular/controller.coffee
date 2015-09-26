@@ -39,12 +39,10 @@ module.exports = (app) ->
           console.log err
 
     showVideo: () ->
-      console.log 'showing'
       $('.ui.modal').modal('show')
       tags = @$scope.displayTags
       @$http.post('/video', {tags})
         .success (video) =>
-          console.log video
           @$scope.videoId = video.bestVideo.videoId
         .error (err) =>
           console.log err

@@ -22,9 +22,7 @@ module.exports = (app) ->
     res.render 'index'
 
   app.post '/tags', (req, res, next) ->
-    console.log 'tags'
     tags = req.body.tags
-    console.log tags
     if tags.length > 0
       mr['query'] = {titleWords: {$in: tags}}
     else
@@ -32,39 +30,31 @@ module.exports = (app) ->
     query: {titleWords: {$in: tags}}
     Post.mapReduce(mr, (err, results) ->
       topWords = findTopWords(results, tags)
-      console.log topWords
       res.send({topWords})
     )
 
   app.post '/posts', (req, res, next) ->
-    console.log 'posts'
     tags = req.body.tags
-    console.log tags
     Post.find({titleWords: {$in: tags}}).exec (err, posts) ->
-      console.log lodash.pluck(posts, 'titleWords')
       relevantPosts = findRelevantPosts(posts, tags)
-      console.log relevantPosts
       res.send({relevantPosts})
 
   app.post '/video', (req, res, next) ->
-    console.log 'video'
     tags = req.body.tags
-    console.log tags
     Video.find({homeCategory: true}).exec (err, videos) ->
       bestVideo = findBestVideo(videos, tags)
-      console.log bestVideo
       res.send {bestVideo}
 
-
 findTopWords = (results, tags) ->
-  numWords = 10 - Math.pow(2, tags.length)
+  numWords = 10 - tags.length
   numWords = if numWords <= 0 then 2 else numWords
   keyValSorted = lodash.sortBy(results, (pair) ->
     return pair.value)
   keyValLength = keyValSorted.length
   redundantTags = lodash.remove(keyValSorted, (keyVal) ->
     for tag in tags
-      return tag == keyVal
+      if tag == keyVal
+        return true
   )
   return keyValSorted.slice(keyValLength - numWords - 1, keyValLength)
 

@@ -59,7 +59,7 @@
 }
 .ui.dimmer
 {
-  background: rgba(0, 0, 0, 0.6) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
 }
 .no-border {
   border: none !important;
