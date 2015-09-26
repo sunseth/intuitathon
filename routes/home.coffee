@@ -1,5 +1,7 @@
 lodash = require 'lodash'
+request = require 'request'
 {Post, Response} = require('../data')
+config = require '../config'
 
 mapf = () ->
   for key, val of this.titleWordRank
@@ -43,8 +45,19 @@ module.exports = (app) ->
       console.log relevantPosts
       res.send({relevantPosts})
 
+  app.get '/videos', (req, res, next) ->
+    youtubeUrl = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=TurboTax&key=#{config.youtube.key}"
+    console.log youtubeUrl
+    request(youtubeUrl, (err, response, body) ->
+      body = JSON.parse(body)
+      console.log body.items[0].contentDetails.relatedPlaylists.uploads
+      uploadsKey = body.items[0].contentDetails.relatedPlaylists.uploads
+      res.send uploadsKey
+    )
+
+
 findTopWords = (results, tags) ->
-  numWords = 12 - Math.pow(2, tags.length)
+  numWords = 10 - Math.pow(2, tags.length)
   numWords = if numWords <= 0 then 2 else numWords
   keyValSorted = lodash.sortBy(results, (pair) ->
     return pair.value)
