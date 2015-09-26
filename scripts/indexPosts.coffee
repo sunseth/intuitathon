@@ -23,6 +23,8 @@ rootWords =
   'summer-time': 'summer'
   taxes: 'tax'
 
+homeWords = ['home', 'house', 'lien', 'mortgage' ,'property', 'residence', 'foreclosure']
+
 count = 0
 extractionOptions = {
   language:"english",
@@ -48,7 +50,9 @@ Post.find({}).exec (err, posts) ->
       tfidf.tfidfs(word, (i, measure) ->
         titleWordImportance[word] = measure)
     titleWordImportance = collapseRootWords(titleWordImportance)
+    homeCategory = determineHomeCategory(titleWordImportance)
     console.log titleWordImportance
+    console.log homeCategory
     post.titleWordRank = titleWordImportance
     post.save eCb
   console.log 'done'
@@ -60,3 +64,10 @@ collapseRootWords = (titleWords) ->
     collapsedWords[collapsed] ||= 0
     collapsedWords[collapsed] += value
   return collapsedWords
+
+determineHomeCategory = (titleWords) ->
+  for word in titleWords
+    for hword in homeWords
+      if natural.JaroWinklerDistance(word, hword) > 0.75
+        return true
+  return false
