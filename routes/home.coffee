@@ -46,13 +46,16 @@ module.exports = (app) ->
       res.send({relevantPosts})
 
   app.get '/videos', (req, res, next) ->
-    youtubeUrl = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=TurboTax&key=#{config.youtube.key}"
-    console.log youtubeUrl
+    youtubeUser = "TurboTax"
+    youtubeUrl = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=#{youtubeUser}&key=#{config.youtube.key}"
     request(youtubeUrl, (err, response, body) ->
       body = JSON.parse(body)
-      console.log body.items[0].contentDetails.relatedPlaylists.uploads
       uploadsKey = body.items[0].contentDetails.relatedPlaylists.uploads
-      res.send uploadsKey
+      playlistUrl = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=#{uploadsKey}&key=#{config.youtube.key}"
+      request(playlistUrl, (err, _response, body) ->
+        console.log JSON.parse(body)
+        res.send JSON.parse(body)
+      )
     )
 
 

@@ -12,3 +12,4 @@ module.exports = exports = (app) ->
 
 exports['Post'] = mongoose.model 'Post', require './schemas/posts', 'posts'
 exports['Response'] = mongoose.model 'Response', require './schemas/responses', 'responses'
+exports['Video'] = mongoose.model 'Video', require './schemas/videos', 'videos'
