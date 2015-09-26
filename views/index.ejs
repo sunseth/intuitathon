@@ -88,14 +88,9 @@
           </div>
         </div>
         <div class="center aligned column">
-          <div class="ui text container">
-            <div class="ui inverted statistic" ng-if="taxes">
-              <div class="value">
-                {{taxes}}
-              </div>
-              <div class="label">
-                $$$
-              </div>
+          <div class="ui center aligned basic segment" ng-if="taxes">
+            <div class="ui center aligned text container">
+              <h1>{{taxes | currency}}</h1>
             </div>
           </div>
         </div>

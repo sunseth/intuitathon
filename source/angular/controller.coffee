@@ -68,4 +68,5 @@ module.exports = (app) ->
       TaxReturn.qualifiedDependents = dependents
       TaxReturn.tpWithholdings = withholding
       TaxReturn.tpTaxableWages = salary
-      @$scope.taxes = TaxReturn.calcTax()
+      TaxReturn.calcTax()
+      @$scope.taxes = Math.round(TaxReturn.refund/100)
