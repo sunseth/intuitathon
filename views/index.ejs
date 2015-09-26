@@ -61,12 +61,57 @@
       </div>
       <br>
     </div>
-    <div class="ui modal">
+    <div class="ui modal youtube">
       <i class="close icon"></i>
       <div class="ui basic center aligned segment">
         <iframe id="player" type="text/html" width="640" height="390"
           ng-src="{{self.trustYoutubeSrc(videoId)}}"
           frameborder="0"></iframe>
+      </div>
+    </div>
+    <div class="ui modal taxcaster">
+      <i class="close icon"></i>
+      <div class="ui two column grid">
+        <div class="center aligned column">
+          <div class="ui padded basic segment">
+            <div class="ui fluid input focus">
+              <input type="text" placeholder="Age" ng-model="age">
+            </div>
+            <div class="ui divider"></div>
+            <div class="ui fluid input focus">
+              <input type="text" placeholder="No. Dependents" ng-model="dependents">
+            </div>
+            <div class="ui divider"></div>
+            <div class="ui fluid input focus">
+              <input type="text" placeholder="Total Withholding" ng-model="withholding">
+            </div>
+          </div>
+        </div>
+        <div class="center aligned column">
+          <div class="ui text container">
+            <div class="ui inverted statistic" ng-if="taxes">
+              <div class="value">
+                {{taxes}}
+              </div>
+              <div class="label">
+                $$$
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui basic center aligned padded segment">
+        <rzslider rz-slider-model="priceSlider"></rzslider>
+      </div>
+      <div class="ui basic padded center aligned segment">
+        <div class="ui labeled button" tabindex="0" ng-click="self.calcTax()">
+          <div class="ui red button">
+            <i class="check icon"></i> Turbo
+          </div>
+          <a class="ui basic red left pointing label">
+            Tax It
+          </a>
+        </div>
       </div>
     </div>
   </body>

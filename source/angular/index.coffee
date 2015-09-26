@@ -1,5 +1,5 @@
 
 
-app = angular.module 'intuit-hackathon', []
+app = angular.module 'intuit-hackathon', ['rzModule']
 
 require('./controller')(app)

@@ -7,7 +7,7 @@ module.exports = (app) ->
       @$scope.displayTags = []
       @$scope.suggestTags = @getTags(@$scope.displayTags)
       @$scope.youtubeURL = "http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
-
+      @$scope.priceSlider = 180000
 
     getTags: (tags) ->
       @$http.post('/tags', {tags})
@@ -39,7 +39,7 @@ module.exports = (app) ->
           console.log err
 
     showVideo: () ->
-      $('.ui.modal').modal('show')
+      $('.ui.modal.youtube').modal('show')
       tags = @$scope.displayTags
       @$http.post('/video', {tags})
         .success (video) =>
@@ -52,3 +52,20 @@ module.exports = (app) ->
 
     trustYoutubeSrc: (videoId) ->
       return @$sce.trustAsResourceUrl("http://www.youtube.com/embed/#{videoId}?enablejsapi=1&origin=http://example.com")
+
+
+    openTaxCaster: () ->
+      $('.ui.modal.taxcaster').modal('show')
+      return true
+
+    calcTax: () ->
+      age = @$scope.age
+      dependents = @$scope.dependents
+      withholding = @$scope.withholding
+      salary = @$scope.priceSlider
+      console.log age, dependents, withholding, salary
+      TaxReturn.tpAge = age
+      TaxReturn.qualifiedDependents = dependents
+      TaxReturn.tpWithholdings = withholding
+      TaxReturn.tpTaxableWages = salary
+      @$scope.taxes = TaxReturn.calcTax()
