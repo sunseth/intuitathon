@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="intuit-hackathon">
+  <head>
+    <title><%=blocks.title%></title>
+    <%- include header %>
+
+    <script>
+    </script>
+
+  </head>
+  <body ng-controller="AppController as self">
+    <div class="pusher">
+      <div class="ui inverted vertical masthead center aligned dimmable dimmed segment aaa-cover">
+        <div class="ui simple dimmer">
+          <div class="ui container">
+            <h1 class="ui inverted header" style="margin-top:4em">
+              Intuit &#8226 ion
+            </h1>
+            <div class="ui inverted divider"></div>
+            <h2>Follow your fingertips</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui fitted basic segment">
+        <div class="ui one center aligned column page grid">
+          <div class="column">
+            <div class="ui massive horizontal divided list">
+              <div class="item">
+                <div class="content">
+                  <a class="ui huge blue basic label">homes <i class="icon close"></i></a>
+                </div>
+              </div>
+              <div class="item" ng-repeat="tag in displayTags">
+                <div class="content">
+                  <a class="ui huge blue basic label">{{tag}} <i class="icon close" ng-click="self.removeTag(tag)"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="ui divider"></div>
+            <button class="ui blue button" ng-repeat="tag in suggestTags" ng-click="self.addTag(tag)">
+              <i class="plus icon"></i> {{tag._id}}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui basic segment">
+        <div class="ui one center aligned column page grid">
+          <div class="ui raised segment" ng-repeat="post in posts">
+            <a class="ui red ribbon label">{{post.published}}</a>
+            <div class="ui center aligned header"><h1>{{post.title}}</h1></div>
+            <div class="ui center aligned header"><h3>By {{post.author}}</h3></div>
+            <div class="ui text container" ng-bind-html="self.htmlParse(post.body)">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+  </body>
+  <%- include footer %>
+</html>
